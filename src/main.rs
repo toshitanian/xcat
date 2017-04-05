@@ -1,8 +1,11 @@
 extern crate calamine;
 
+
 use std::env;
 use std::path::PathBuf;
+
 use calamine::{Excel, Range, DataType, Result};
+
 
 fn main() {
     // converts first argument into a csv (same name, silently overrides
@@ -12,11 +15,6 @@ fn main() {
         .skip(1)
         .next()
         .expect("Please provide an excel file to convert");
-    let sheet = env::args()
-        .skip(2)
-        .next()
-        .expect("Expecting a sheet name as second argument");
-
     let sce = PathBuf::from(file);
     match sce.extension().and_then(|s| s.to_str()) {
         Some("xlsx") | Some("xlsm") | Some("xlsb") | Some("xls") => (),
@@ -24,7 +22,11 @@ fn main() {
     }
 
     let mut xl = Excel::open(&sce).unwrap();
-    let range = xl.worksheet_range(&sheet).unwrap();
+
+    let sheet_name = xl.sheet_names().unwrap()[0];
+
+    let mut xl2 = Excel::open(&sce).unwrap();
+    let range = xl2.worksheet_range(&sheet_name).unwrap();
 
     write_range(range).unwrap();
 }
