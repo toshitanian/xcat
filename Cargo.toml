@@ -5,3 +5,4 @@ authors = ["vagrant"]
 
 [dependencies]
 calamine = "*"
+csv = "*"
