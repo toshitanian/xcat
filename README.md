@@ -2,6 +2,14 @@
 
 Expanded cat tool especially for Excel
 
+# Installation
+
+## macOS
+``` bash
+$ brew tap kawasakitoshiya/xcat
+$ brew install xcat
+```
+
 # How to use
 
 ``` bash
