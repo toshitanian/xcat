@@ -18,14 +18,14 @@ macro_rules! println_stderr(
 );
 
 
-fn read_as_excel(sce: PathBuf) {
+fn read_as_excel(sce: PathBuf, delimiter: &str) {
     let mut xl = Excel::open(&sce).unwrap();
 
     let range_result = xl.sheet_names()
         .map(|elem| elem[0].to_string())
         .and_then(|name| xl.worksheet_range(&name));
     let range = range_result.unwrap();
-    write_range(range).unwrap();
+    write_range(range, delimiter).unwrap();
 }
 
 fn read_as_csv(sce: PathBuf, delimiter: &str) {
@@ -72,7 +72,7 @@ fn main() {
             continue;
         }
         match sce.extension().and_then(|s| s.to_str()) {
-            Some("xlsx") | Some("xlsm") | Some("xlsb") | Some("xls") => read_as_excel(sce),
+            Some("xlsx") | Some("xlsm") | Some("xlsb") | Some("xls") => read_as_excel(sce, delimiter),
             Some("csv") | Some("txt") => read_as_csv(sce, delimiter),
             Some("ods") => println_stderr!("{}: .ods is not supported yet", file),
             _ => println_stderr!("{}: Not supported file format", file),
@@ -82,7 +82,7 @@ fn main() {
 
 }
 
-fn write_range(range: Range) -> Result<()> {
+fn write_range(range: Range, delimiter: &str) -> Result<()> {
     let n = range.get_size().1 - 1;
     for r in range.rows() {
         for (i, c) in r.iter().enumerate() {
@@ -95,7 +95,7 @@ fn write_range(range: Range) -> Result<()> {
                 DataType::Bool(ref b) => print!("{}", b),
             };
             if i != n {
-                let _ = print!(",");
+                let _ = print!("{}", delimiter);
             }
         }
         let _ = println!("");

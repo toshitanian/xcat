@@ -1,6 +1,6 @@
 [package]
 name = "xcat"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Toshiya. K. <kawasakitoshiya@gmail.com>"]
 
 [dependencies]
