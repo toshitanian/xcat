@@ -5,7 +5,6 @@ extern crate csv;
 extern crate clap;
 
 
-use std::env;
 use std::io::Write;
 use std::path::PathBuf;
 use calamine::{Excel, Range, DataType, Result};
@@ -75,7 +74,8 @@ fn main() {
         match sce.extension().and_then(|s| s.to_str()) {
             Some("xlsx") | Some("xlsm") | Some("xlsb") | Some("xls") => read_as_excel(sce),
             Some("csv") | Some("txt") => read_as_csv(sce, delimiter),
-            _ => panic!("Expecting an excel file"),
+            Some("ods") => println_stderr!("{}: .ods is not supported yet", file),
+            _ => println_stderr!("{}: Not supported file format", file),
         }
 
     }
