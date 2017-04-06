@@ -9,11 +9,10 @@ use calamine::{Excel, Range, DataType, Result};
 fn read_as_excel(sce: PathBuf) {
     let mut xl = Excel::open(&sce).unwrap();
 
-    let sheet_name = xl.sheet_names().unwrap()[0];
-
-    let mut xl2 = Excel::open(&sce).unwrap();
-    let range = xl2.worksheet_range(&sheet_name).unwrap();
-
+    let range_result = xl.sheet_names()
+        .map(|elem| elem[0].to_string())
+        .and_then(|name| xl.worksheet_range(&name));
+    let range = range_result.unwrap();
     write_range(range).unwrap();
 }
 
