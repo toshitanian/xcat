@@ -3,8 +3,17 @@ extern crate csv;
 
 
 use std::env;
+use std::io::Write;
 use std::path::PathBuf;
 use calamine::{Excel, Range, DataType, Result};
+
+macro_rules! println_stderr(
+    ($($arg:tt)*) => { {
+        let r = writeln!(&mut ::std::io::stderr(), $($arg)*);
+        r.expect("failed printing to stderr");
+    } }
+);
+
 
 fn read_as_excel(sce: PathBuf) {
     let mut xl = Excel::open(&sce).unwrap();
@@ -36,15 +45,18 @@ fn main() {
     // converts first argument into a csv (same name, silently overrides
     // if the file already exists
 
-    let file = env::args()
-        .skip(1)
-        .next()
-        .expect("Please provide an file to show, csv, excel");
-    let sce = PathBuf::from(file);
-    match sce.extension().and_then(|s| s.to_str()) {
-        Some("xlsx") | Some("xlsm") | Some("xlsb") | Some("xls") => read_as_excel(sce),
-        Some("csv") | Some("txt") => read_as_csv(sce),
-        _ => panic!("Expecting an excel file"),
+    for file in env::args().skip(1) {
+        let sce = PathBuf::from(&file);
+        if !sce.exists() {
+            println_stderr!("{}: No such file or directory", file);
+            continue;
+        }
+        match sce.extension().and_then(|s| s.to_str()) {
+            Some("xlsx") | Some("xlsm") | Some("xlsb") | Some("xls") => read_as_excel(sce),
+            Some("csv") | Some("txt") => read_as_csv(sce),
+            _ => panic!("Expecting an excel file"),
+        }
+
     }
 
 }
