@@ -1,11 +1,15 @@
 extern crate calamine;
 extern crate csv;
 
+#[macro_use]
+extern crate clap;
+
 
 use std::env;
 use std::io::Write;
 use std::path::PathBuf;
 use calamine::{Excel, Range, DataType, Result};
+use clap::{Arg, App};
 
 macro_rules! println_stderr(
     ($($arg:tt)*) => { {
@@ -25,14 +29,14 @@ fn read_as_excel(sce: PathBuf) {
     write_range(range).unwrap();
 }
 
-fn read_as_csv(sce: PathBuf) {
+fn read_as_csv(sce: PathBuf, delimiter: &str) {
     let mut rdr = csv::Reader::from_file(&sce).unwrap();
     for row in rdr.records().map(|r| r.unwrap()) {
         let n = row.len() - 1;
         for (i, c) in row.iter().enumerate() {
             print!("{}", c);
             if i != n {
-                let _ = print!(",");
+                let _ = print!("{}", delimiter);
             }
 
         }
@@ -42,10 +46,27 @@ fn read_as_csv(sce: PathBuf) {
 
 
 fn main() {
-    // converts first argument into a csv (same name, silently overrides
-    // if the file already exists
+    let matches = App::new("xcat")
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about("Expanded cat tool especially for Excel")
+        .arg(Arg::with_name("delimiter")
+             .help("Delimiter for csv file")
+             .short("d")
+             .long("delimiter")
+             .value_name("DELIMITER")
+             .takes_value(true))
+        .arg(Arg::with_name("input_files")
+             .help("Input files to use")
+             .multiple(true)
+             .required(true)
+             .value_name("file")
+             .takes_value(true))
+        .get_matches();
+    let delimiter = matches.value_of("delimiter").unwrap_or(",");
 
-    for file in env::args().skip(1) {
+    let files: Vec<_> = matches.values_of("input_files").unwrap().collect();
+    for file in files {
         let sce = PathBuf::from(&file);
         if !sce.exists() {
             println_stderr!("{}: No such file or directory", file);
@@ -53,7 +74,7 @@ fn main() {
         }
         match sce.extension().and_then(|s| s.to_str()) {
             Some("xlsx") | Some("xlsm") | Some("xlsb") | Some("xls") => read_as_excel(sce),
-            Some("csv") | Some("txt") => read_as_csv(sce),
+            Some("csv") | Some("txt") => read_as_csv(sce, delimiter),
             _ => panic!("Expecting an excel file"),
         }
 

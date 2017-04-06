@@ -1,8 +1,9 @@
 [package]
 name = "xcat"
 version = "0.1.0"
-authors = ["vagrant"]
+authors = ["Toshiya. K. <kawasakitoshiya@gmail.com>"]
 
 [dependencies]
 calamine = "*"
 csv = "*"
+clap = "*"
