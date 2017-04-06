@@ -2,35 +2,44 @@
 
 Expanded cat tool especially for Excel
 
-This project is on WIP.
+# How to use
+
+``` bash
+xcat 0.1.0
+Toshiya. K. <kawasakitoshiya@gmail.com>
+Expanded cat tool especially for Excel
+
+USAGE:
+    xcat [OPTIONS] <file>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -d, --delimiter <DELIMITER>    Delimiter for csv file
+
+ARGS:
+    <file>...    Input files to use
+
+```
 
 # Description
 `xcat` is tool to show excel and csv file simultaneously on command line interface.
 
-``` abap
-$ xcat price_list.xlsx
-#,name,price
-1,pencil,110
-2,pen,150
-3,apple,200
-4,banana,100
-
-$ xcat price_list.csv
-1,pencil,110
-2,pen,150
-3,apple,200
-4,banana,100
-
-
-
+``` bash
+$ xcat data.xlsx data.csv
+1,excel_row_1
+2,excel_row_1
+1,csv_row_2
+2,csv_row_2
 ```
 
-# To be implemented...
-
-```
-$ xcat a.xlsx b.csv
-1, excel_row_1
-2, excel_row_1
-1, csv_row_2
-2, csv_row_2
+*Change delimiter*
+``` bash
+$ xcat -d"|" data.xlsx data.csv
+1|excel_row_1
+2|excel_row_1
+1|csv_row_2
+2|csv_row_2
 ```
