@@ -54,7 +54,7 @@ fn write_range(range: Range) -> Result<()> {
     for r in range.rows() {
         for (i, c) in r.iter().enumerate() {
             let _ = match *c {
-                DataType::Empty => println!(""),
+                DataType::Empty => print!(""),
                 DataType::String(ref s) => print!("{}", s),
                 DataType::Float(ref f) => print!("{}", f),
                 DataType::Int(ref i) => print!("{}", i),
