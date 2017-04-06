@@ -4,6 +4,6 @@ version = "0.1.0"
 authors = ["Toshiya. K. <kawasakitoshiya@gmail.com>"]
 
 [dependencies]
-calamine = "*"
-csv = "*"
-clap = "*"
+calamine = "0.5"
+csv = "0.15"
+clap = "2.23"
