@@ -3,7 +3,7 @@ extern crate calamine;
 use std::path::PathBuf;
 
 pub fn read(sce: PathBuf, delimiter: &str) {
-    let mut xl = calamine::Excel::open(&sce).unwrap();
+    let mut xl = calamine::Sheets::open(&sce).unwrap();
     let range_result = xl.sheet_names()
         .map(|elem| elem[0].to_string())
         .and_then(|name| xl.worksheet_range(&name));
